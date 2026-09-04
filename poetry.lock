@@ -38,6 +38,21 @@ argon2 = ["argon2-cffi (>=19.1.0)"]
 bcrypt = ["bcrypt"]
 
 [[package]]
+name = "djangorestframework"
+version = "3.18.0"
+description = "Web APIs for Django, made easy."
+optional = false
+python-versions = ">=3.10"
+groups = ["main"]
+files = [
+    {file = "djangorestframework-3.18.0-py3-none-any.whl", hash = "sha256:381fc44d3249c9565c5f723850855b734e99030eb30957a49f506d3fe11d7dcb"},
+    {file = "djangorestframework-3.18.0.tar.gz", hash = "sha256:2323a5111837e0b784dcb8323abc78ecc54fa2a5af7aff2677cf50cdd849477f"},
+]
+
+[package.dependencies]
+django = ">=5.2"
+
+[[package]]
 name = "factory-boy"
 version = "3.3.3"
 description = "A versatile test fixtures replacement based on thoughtbot's factory_bot for Ruby."
@@ -107,4 +122,4 @@ markers = {main = "sys_platform == \"win32\"", dev = "platform_system == \"Windo
 [metadata]
 lock-version = "2.1"
 python-versions = ">=3.11"
-content-hash = "7c8a3e54e71e4c36582b2050904129a78af8bbb60c01e4bef42d2c8f1a9bf15b"
+content-hash = "c84fc555559e64ada43f46f70c3a20544c7a18d17df552874c3fae5e5f2885e3"
