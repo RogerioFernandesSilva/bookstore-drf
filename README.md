@@ -35,8 +35,8 @@ poetry install
 3. Rodar as migrações
 powershell
 poetry run python manage.py migrate
-4. Subir o servidor de desenvolvimento
-powershell
+4. Subir o servidor de desenvolvimento powershell
+poetry run python manage.py createsuperuser
 poetry run python manage.py runserver
 
 Depois disso, o projeto estará disponível em http://127.0.0.1:8000.
