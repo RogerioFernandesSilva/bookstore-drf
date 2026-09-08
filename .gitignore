@@ -1,0 +1,40 @@
+# --- Python ---
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# --- Ambientes virtuais ---
+.venv/
+venv/
+env/
+ENV/
+
+# --- Poetry ---
+# (o poetry.lock deve ser versionado, não ignorado)
+
+# --- Django ---
+db.sqlite3
+db.sqlite3-journal
+*.log
+media/
+staticfiles/
+
+# --- Variáveis de ambiente / segredos ---
+.env
+.env.*
+*.pem
+
+# --- Editores / IDEs ---
+.vscode/
+.idea/
+*.swp
+
+# --- Sistema operacional ---
+.DS_Store
+Thumbs.db
+
+# --- Testes / cobertura ---
+.coverage
+htmlcov/
+.pytest_cache/
