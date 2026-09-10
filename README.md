@@ -140,5 +140,99 @@ bookstore-drf/
 | `poetry show` | Lista as dependências instaladas |
 
 ---
+## 🔐 Autenticação via Token (Order)
 
+[#-autenticação-via-token-order](#-autenticação-via-token-order)
+
+A rota de **Orders** (`/api/orders/`) exige autenticação via **Token** do Django REST Framework. As demais rotas (`Category`, `Product`) continuam públicas, sem restrição.
+
+### Como funciona
+
+- Usa a `TokenAuthentication` do DRF: cada usuário possui um token único, associado à tabela do app `rest_framework.authtoken`.
+- O cliente deve enviar o token no header `Authorization` em toda requisição à `OrderViewSet`:
+
+```
+Authorization: Token <seu_token_aqui>
+```
+
+Sem esse header, qualquer requisição a `/api/orders/` retorna `401 Unauthorized`.
+
+### 1. Instalar/migrar
+
+O app `rest_framework.authtoken` já está incluído em `INSTALLED_APPS`. Após clonar o projeto, rode as migrações normalmente:
+
+```
+poetry run python manage.py migrate
+```
+
+### 2. Criar um usuário (se ainda não tiver um)
+
+```
+poetry run python manage.py createsuperuser
+```
+
+### 3. Gerar um token para o usuário
+
+**Opção A — comando de management:**
+
+```
+poetry run python manage.py drf_create_token <username>
+```
+
+**Opção B — via shell do Django:**
+
+```
+poetry run python manage.py shell
+```
+
+```python
+from django.contrib.auth.models import User
+from rest_framework.authtoken.models import Token
+
+user = User.objects.get(username="<username>")
+token, created = Token.objects.get_or_create(user=user)
+print(token.key)
+```
+
+**Opção C — via Django Admin:** acesse `/admin/`, vá em **Auth Token → Tokens → Add token**, selecione o usuário e salve.
+
+### 4. Testar a rota protegida
+
+Sem token (deve retornar `401`):
+
+```
+curl -i http://127.0.0.1:8000/api/orders/
+```
+
+Com token (deve retornar `200`):
+
+```
+curl -i -H "Authorization: Token <seu_token_aqui>" http://127.0.0.1:8000/api/orders/
+```
+
+### 5. Testando no Postman
+
+1. Crie uma request `GET` para `http://127.0.0.1:8000/api/orders/`.
+2. Na aba **Headers**, adicione:
+   - **Key:** `Authorization`
+   - **Value:** `Token <seu_token_aqui>`
+3. Clique em **Send** → resposta esperada: `200 OK` com a lista de orders.
+4. Remova o header e envie novamente → resposta esperada: `401 Unauthorized`.
+
+> ⚠️ O prefixo é `Token`, não `Bearer` — é o padrão usado pela `TokenAuthentication` do DRF.
+
+### Resumo técnico
+
+| Endpoint | Autenticação exigida |
+| --- | --- |
+| `/api/categories/` | Nenhuma |
+| `/api/products/` | Nenhuma |
+| `/api/orders/` | Token (`Authorization: Token <token>`) |
+
+A restrição está isolada na `OrderViewSet` (`api/views.py`), através de:
+
+```python
+authentication_classes = [TokenAuthentication]
+permission_classes = [IsAuthenticated]
+```
 *Projeto em desenvolvimento como parte do curso EBAC - Python Back-End.*
