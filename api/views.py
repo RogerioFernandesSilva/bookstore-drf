@@ -1,4 +1,6 @@
 from rest_framework import viewsets
+from rest_framework.authentication import TokenAuthentication
+from rest_framework.permissions import IsAuthenticated
 
 from .models import Category, Order, Product
 from .serializers import CategorySerializer, OrderSerializer, ProductSerializer
@@ -39,7 +41,14 @@ class OrderViewSet(viewsets.ModelViewSet):
 
     `select_related` evita consultas extras ao acessar o produto (e a
     categoria do produto) na representação aninhada do serializer.
+
+    Exige autenticação via Token: o cliente precisa enviar o header
+    `Authorization: Token <token>` para acessar qualquer endpoint
+    desta ViewSet. As demais ViewSets (Category, Product) não são
+    afetadas — continuam sem restrição.
     """
 
     queryset = Order.objects.select_related("product", "product__category").all()
     serializer_class = OrderSerializer
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated]
